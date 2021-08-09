@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import messagebox
 import random
 import pyperclip
+import json
 
 # ---------------------------- PASSWORD GENERATOR ------------------------------- #
 def generate_password():
@@ -30,18 +31,49 @@ def save():
     user = entry_user.get()
     password = entry_password.get()
 
+    data_dict = {
+        website:
+        {
+            "email": user,
+            "password": password,
+        }
+    }
+
     if len(website)==0 or len(user)==0 or len(password)==0:
         messagebox.showinfo(title="error", message="You have to enter all the fields!")
-    else:        
-        is_ok = messagebox.askokcancel(title=website, message=f"Are you sure the following is correct?\n username:{user}\n password:{password}")
-
-        if is_ok:
-            f = open("data.txt", "a")
-            f.write(f"{website} | {user} | {password}\n")
-            f.close()
+    else:
+        try:        
+            with open("data.json", "r") as f:
+                data = json.load(f)
+                
+        except FileNotFoundError:
+            with open("data.json", "w") as f:
+                json.dump(data_dict, f, indent=4)
+        else:        
+            data.update(data_dict)
+            with open("data.json", "w") as f:
+                json.dump(data, f, indent=4)
+        finally:
             entry_password.delete(0, END)
             entry_website.delete(0, END)
-            entry_user.delete(0, END)
+
+
+def search():
+    website = entry_website.get()
+
+    try:
+        with open("data.json", "r") as f:
+            data = json.load(f)
+            
+    except FileNotFoundError:
+        messagebox.showinfo(title="File Not Found!", message="You haven't create the file yet!")
+    else:
+        if website in data:
+            email = data[website]["email"]
+            password = data[website]["password"]
+            messagebox.showinfo(title="Your password", message=f"Below is your password:\n Website: {website} \n Email: {email} \n Password: {password}")
+        else:
+            messagebox.showinfo(title="Website Not Found!", message=f"{website} is not found in the file!")
 
 # ---------------------------- UI SETUP ------------------------------- #
 
@@ -57,26 +89,29 @@ canvas.grid(column=1, row=0)
 label_website = Label(text="Website:")
 label_website.grid(column=0, row=1)
 
-entry_website = Entry(width=35)
-entry_website.grid(column=1, row=1, columnspan=2)
+entry_website = Entry(width=26)
+entry_website.grid(column=1, row=1)
 entry_website.focus()
 
 label_user = Label(text="Email/Username:")
 label_user.grid(column=0, row=2)
 
-entry_user = Entry(width=35)
+entry_user = Entry(width=43)
 entry_user.grid(column=1, row=2, columnspan=2)
 
 label_password = Label(text="Password:")
 label_password.grid(column=0, row=3)
 
-entry_password = Entry(width=23)
+entry_password = Entry(width=26)
 entry_password.grid(column=1, row=3)
 
 generate_password = Button(text="Generate Password", command=generate_password)
 generate_password.grid(column=2, row=3)
 
-button_add = Button(text="Add", width=36, command=save)
+button_add = Button(text="Add", width=43, command=save)
 button_add.grid(column=1, row=4, columnspan=2)
+
+Search = Button(text="Search", command=search, width=15)
+Search.grid(column=2, row=1)
 
 window.mainloop()
