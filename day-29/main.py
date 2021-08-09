@@ -1,5 +1,5 @@
 from tkinter import *
-from tkinter import messagebox
+from tkinter import messagebox, font
 import random
 import pyperclip
 import json
@@ -78,7 +78,7 @@ def search():
 # ---------------------------- UI SETUP ------------------------------- #
 
 window = Tk()
-window.title("My Password")
+window.title("我的密碼管理")
 window.config(padx=50, pady=50)
 
 canvas = Canvas(width=200, height=200)
@@ -86,32 +86,32 @@ img = PhotoImage(file="logo.png")
 canvas.create_image(100, 100, image= img)
 canvas.grid(column=1, row=0)
 
-label_website = Label(text="Website:")
+label_website = Label(text="網站:")
 label_website.grid(column=0, row=1)
 
 entry_website = Entry(width=26)
 entry_website.grid(column=1, row=1)
 entry_website.focus()
 
-label_user = Label(text="Email/Username:")
+label_user = Label(text="Email/使用者名稱:")
 label_user.grid(column=0, row=2)
 
-entry_user = Entry(width=43)
+entry_user = Entry(width=42)
 entry_user.grid(column=1, row=2, columnspan=2)
 
-label_password = Label(text="Password:")
+label_password = Label(text="密碼:")
 label_password.grid(column=0, row=3)
 
 entry_password = Entry(width=26)
 entry_password.grid(column=1, row=3)
 
-generate_password = Button(text="Generate Password", command=generate_password)
+generate_password = Button(text="產生密碼", command=generate_password, width=15)
 generate_password.grid(column=2, row=3)
 
-button_add = Button(text="Add", width=43, command=save)
+button_add = Button(text="新增", width=43, command=save)
 button_add.grid(column=1, row=4, columnspan=2)
 
-Search = Button(text="Search", command=search, width=15)
+Search = Button(text="搜尋", command=search, width=15)
 Search.grid(column=2, row=1)
 
 window.mainloop()
