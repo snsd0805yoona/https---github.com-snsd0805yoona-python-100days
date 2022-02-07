@@ -20,3 +20,4 @@ post_pixel_endpoint=f"{pixela_endpoint}/{USERNAME}/graphs/{GRAPH_ID}/{date_forma
 responses = requests.put(url=post_pixel_endpoint, json=add_pixel_params, headers=headers)
 
 print(responses.text)
+print(DATE)
